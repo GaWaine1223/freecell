@@ -9,9 +9,6 @@ Just a blockchain, Nothing in particular.
 		- command line // standard inputs to support local operation
 	handlers        // 函数入口层
 		- transaction
-            - activity.go // 运营活动与券
-            - bill.go       // 账单价格
-            - pay.go    // 支付方式等
         - append
 	models
 		- block
