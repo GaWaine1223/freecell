@@ -7,25 +7,27 @@ import (
 )
 
 func TestGenerateBlock(t *testing.T) {
-	b := GenerateBlock([32]byte{0}, []byte("TEST_0"), 0)
+	b := GenerateBlock("0", "TEST_0", 0)
 	fmt.Println(b)
 }
 
 func TestFormateBlock(t *testing.T) {
-	b := GenerateBlock([32]byte{0}, []byte("TEST_0"), 0)
+	b := GenerateBlock("0", "TEST_0", 0)
 	jb, _ := json.Marshal(b)
-	b2, err := FormateBlock(jb)
+	bf, err := FormateBlock(jb)
 	if err != nil {
 		fmt.Println(err)
 	}
-	if b2 != b {
+	if *bf != *b {
 		t.Fail()
 	}
-	fmt.Println((b2 == b))
+	fmt.Println("bf == b")
 }
 
 func TestBlock_IsValid(t *testing.T) {
-	b := GenerateBlock([32]byte{0}, []byte("TEST_0"), 0)
-	b1 := GenerateBlock(b.Hash, []byte("TEST_1"), 1)
-	fmt.Println(b1.IsValid(b))
+	b := GenerateBlock("0", "TEST_0", 0)
+	b1 := GenerateBlock(b.Hash, "TEST_1", 1)
+	b2 := GenerateBlock(b.Hash, "TEST_2", 1)
+	fmt.Println("b1 is behind b:", b1.IsValid(b))
+	fmt.Println("b2 is behind b1:", b2.IsValid(b1))
 }

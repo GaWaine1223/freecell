@@ -58,14 +58,12 @@ func (b *Block) Interupt() bool {
 
 func (b *Block) IsValid(pvb *Block) bool {
 	var metaData string
-	var byteHash [dhash.Size]byte
 	if b.PVHash != pvb.Hash {
 		return false
 	}
 	tStr := strconv.FormatInt(b.Timestamp, 10)
 	nStr := strconv.FormatInt(b.Index, 10)
 	noStr := strconv.FormatInt(b.Nonce, 10)
-	metaData = b.PVHash + tStr + b.Data + nStr + noStr
-	copy(byteHash[:], b.Hash)
-	return dhash.Verification([]byte(metaData), byteHash)
+	metaData = b.PVHash + tStr + b.Data + nStr
+	return dhash.Verification(append([]byte(metaData), []byte(noStr)...), b.Hash)
 }

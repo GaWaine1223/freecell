@@ -11,8 +11,8 @@ var theChain []*Block
 
 func init() {
 	theChain = make([]*Block, 0)
-	Genesis := GenerateBlock([32]byte{0}, []byte("This is Genesis Block, Copyright Belong to Lothar"), 0)
-	theChain = append(theChain, Genesis)
+	/*Genesis := GenerateBlock("0", "This is Genesis Block, Copyright Belong to Lothar", 0)
+	theChain = append(theChain, Genesis)*/
 }
 
 func Append(b *Block) error {
