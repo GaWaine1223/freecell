@@ -9,18 +9,23 @@ import (
 	"github.com/GaWaine1223/Lothar/keygen"
 )
 
+// Trans transaction struct
 type Trans struct {
-	// public key
-	Account		string		`json:"account"`
-	Cipher		string        `json:"cipher"`
-	Transaction	string        `json:"transaction"`
+	// Account public key
+	Account     string `json:"account"`
+	// Cipher encrypt result
+	Cipher      string `json:"cipher"`
+	// Transaction result
+	Transaction string `json:"transaction"`
 }
 
+// IsVaild return if a trans is legal.
 func (t *Trans) IsVaild() error {
 	return keygen.Verify(t.Account, t.Cipher, []byte(t.Transaction))
 }
 
-func FormateTrans(b []byte) (*Trans, error) {
+// FormatTrans format []byte to a trans object.
+func FormatTrans(b []byte) (*Trans, error) {
 	trans := &Trans{}
 	err := json.Unmarshal(b, trans)
 	if err != nil {
@@ -29,24 +34,26 @@ func FormateTrans(b []byte) (*Trans, error) {
 	return trans, nil
 }
 
+// GenerateTransWithID generate a trans using user's ID.
 func GenerateTransWithID(id, data string) (*Trans, error) {
 	a, c, err := keygen.Signature(id, []byte(data))
 	if err != nil {
 		return nil, err
 	}
 	return &Trans{
-		Account: a,
-		Cipher: c,
+		Account:     a,
+		Cipher:      c,
 		Transaction: data}, nil
 }
 
+// GenerateTransWithKey generate a trans using the key.
 func GenerateTransWithKey(pb, pv, data string) (*Trans, error) {
 	c, err := keygen.Signature2(pv, []byte(data))
 	if err != nil {
 		return nil, err
 	}
 	return &Trans{
-		Account: pb,
-		Cipher: c,
+		Account:     pb,
+		Cipher:      c,
 		Transaction: data}, nil
 }

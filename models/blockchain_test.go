@@ -1,9 +1,9 @@
 package models
 
 import (
-	"testing"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"testing"
 )
 
 func TestAppendChain(t *testing.T) {
@@ -43,12 +43,12 @@ func TestReplaceChain(t *testing.T) {
 
 	c := FetchChain()
 	bc, _ := json.Marshal(c)
-	c2, err := FormateChain(bc)
+	c2, err := FormatChain(bc)
 	if err != nil {
-		fmt.Println("formate fail")
+		fmt.Println("format fail")
 	}
 	if c2 != FetchChain() {
-		fmt.Printf("formate fail2, c2=%v||c=%v\n", c2, FetchChain())
+		fmt.Printf("format fail2, c2=%v||c=%v\n", c2, FetchChain())
 	}
 
 	b2 := GenerateBlock(GetChainTail().Hash, "Test_2", GetChainLen())

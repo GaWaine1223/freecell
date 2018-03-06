@@ -11,13 +11,15 @@ import (
 	"github.com/GaWaine1223/Lothar/freecell/common"
 )
 
-type User struct{
-	Name	string
-	Path	string
+// User struct.
+type User struct {
+	Name    string
+	Path    string
 	Public  string
 	Private string
 }
 
+// Login allow user to login and get their key.
 func Login(name string) (*User, error) {
 	uPath := keygen.GetUserPath(name)
 	pvKeyPath := path.Join(uPath, "private.pem")
@@ -26,9 +28,9 @@ func Login(name string) (*User, error) {
 	pb, errb := keygen.GetKeyMd5(pbKeyPath)
 	if errv == nil && errb == nil {
 		return &User{
-			Name: name,
-			Path: uPath,
-			Public: pb,
+			Name:    name,
+			Path:    uPath,
+			Public:  pb,
 			Private: pv}, nil
 	}
 
@@ -44,8 +46,8 @@ func Login(name string) (*User, error) {
 		return nil, err
 	}
 	return &User{
-		Name: name,
-		Path: uPath,
-		Public: pb,
+		Name:    name,
+		Path:    uPath,
+		Public:  pb,
 		Private: pv}, nil
 }

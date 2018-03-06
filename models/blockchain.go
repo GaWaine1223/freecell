@@ -9,8 +9,9 @@ import (
 	"github.com/GaWaine1223/Lothar/freecell/common"
 )
 
+// TheChain BlockChain struct.
 type TheChain struct {
-	Chain []*Block        `json:"chain"`
+	Chain []*Block `json:"chain"`
 }
 
 var singleChain *TheChain
@@ -26,7 +27,8 @@ func newChain() *TheChain {
 	return &TheChain{theChain}
 }
 
-func FormateChain(b []byte) (*TheChain, error) {
+// FormatChain format received []byte to a blockchain object.
+func FormatChain(b []byte) (*TheChain, error) {
 	c := &TheChain{}
 	err := json.Unmarshal(b, c)
 	if err != nil {
@@ -35,6 +37,7 @@ func FormateChain(b []byte) (*TheChain, error) {
 	return c, err
 }
 
+// AppendChain append a valid block to the chain's tail.
 func AppendChain(b *Block) error {
 	if !b.IsValid(GetChainTail()) {
 		return common.Error(common.ErrInvalidBlock)
@@ -43,18 +46,22 @@ func AppendChain(b *Block) error {
 	return nil
 }
 
+// FetchChain fetch the whole chain.
 func FetchChain() *TheChain {
 	return singleChain
 }
 
+// GetChainTail get the tail block of the chain.
 func GetChainTail() *Block {
 	return singleChain.Chain[GetChainLen()-1]
 }
 
+// GetChainLen get the chain's length.
 func GetChainLen() int64 {
 	return int64(len(singleChain.Chain))
 }
 
+// ReplaceChain replace the chain by a longer valid chain.
 func ReplaceChain(c2 *TheChain) error {
 	if int64(len(c2.Chain)) <= GetChainLen() {
 		return common.Error(common.ErrInvalidBlock)
@@ -73,4 +80,3 @@ func ReplaceChain(c2 *TheChain) error {
 	singleChain.Chain = c2.Chain
 	return nil
 }
-

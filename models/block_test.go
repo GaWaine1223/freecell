@@ -1,9 +1,9 @@
 package models
 
 import (
-	"testing"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"testing"
 )
 
 func TestGenerateBlock(t *testing.T) {
@@ -11,10 +11,10 @@ func TestGenerateBlock(t *testing.T) {
 	fmt.Println(b)
 }
 
-func TestFormateBlock(t *testing.T) {
+func TestFormatBlock(t *testing.T) {
 	b := GenerateBlock("0", "TEST_0", 0)
 	jb, _ := json.Marshal(b)
-	bf, err := FormateBlock(jb)
+	bf, err := FormatBlock(jb)
 	if err != nil {
 		fmt.Println(err)
 	}

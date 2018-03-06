@@ -22,9 +22,8 @@ func (err Error) Error() string {
 }
 
 var errMap = map[Error]string{
-	ErrInvalidBlock: "非法区块",
+	ErrInvalidBlock:        "非法区块",
 	ErrInvalidGenesisBlock: "非法创世区块",
 
 	ErrInvalidChain: "非法链",
 }
-
