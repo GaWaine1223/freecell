@@ -4,29 +4,71 @@
 package models
 
 import (
+	"encoding/json"
+
 	"github.com/GaWaine1223/Lothar/freecell/common"
 )
 
-var theChain []*Block
-
-func init() {
-	theChain = make([]*Block, 0)
-	/*Genesis := GenerateBlock("0", "This is Genesis Block, Copyright Belong to Lothar", 0)
-	theChain = append(theChain, Genesis)*/
+type TheChain struct {
+	Chain []*Block        `json:"chain"`
 }
 
-func Append(b *Block) error {
-	if b.IsValid(GetTail()) {
+var singleChain *TheChain
+
+func init() {
+	singleChain = newChain()
+	Genesis := GenerateBlock("0", "This is Genesis Block, Copyright Belong to Lothar", 0)
+	singleChain.Chain = append(singleChain.Chain, Genesis)
+}
+
+func newChain() *TheChain {
+	theChain := make([]*Block, 0)
+	return &TheChain{theChain}
+}
+func AppendChain(b *Block) error {
+	if !b.IsValid(GetChainTail()) {
 		return common.Error(common.ErrInvalidBlock)
 	}
-	theChain = append(theChain, b)
+	singleChain.Chain = append(singleChain.Chain, b)
 	return nil
 }
 
-func GetTail() *Block {
-	return theChain[GetLen()-1]
+func GetChainTail() *Block {
+	return singleChain.Chain[GetChainLen()-1]
 }
 
-func GetLen() int {
-	return len(theChain)
+func GetChainLen() int64 {
+	return int64(len(singleChain.Chain))
+}
+
+func ReplaceChain(c2 *TheChain) error {
+	if int64(len(c2.Chain)) <= GetChainLen() {
+		return common.Error(common.ErrInvalidBlock)
+	}
+	for i, b := range c2.Chain {
+		if i == 0 {
+			if *c2.Chain[i] != *singleChain.Chain[i] {
+				return common.Error(common.ErrInvalidGenesisBlock)
+			}
+			continue
+		}
+		if !b.IsValid(c2.Chain[i-1]) {
+			return common.Error(common.ErrInvalidBlock)
+		}
+	}
+	singleChain.Chain = c2.Chain
+	return nil
+}
+
+func FetchChain() *TheChain {
+	return singleChain
+}
+
+func FormateChain(b []byte) (*TheChain, error) {
+	c := &TheChain{}
+	err := json.Unmarshal(b, c)
+	if err != nil {
+		return nil, err
+	}
+	return c, err
 }

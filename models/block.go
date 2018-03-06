@@ -15,12 +15,12 @@ import (
 )
 
 type Block struct {
-	PVHash		string
-	Timestamp	int64
-	Data		string
-	Index		int64
-	Nonce		int64
-	Hash 		string
+	PVHash		string        `json:"pv_hash"`
+	Timestamp	int64		`json:"timestamp"`
+	Data		string		`json:"data"`
+	Index		int64		`json:"index"`
+	Nonce		int64		`json:"nonce"`
+	Hash 		string		`json:"hash"`
 }
 
 // Formate received []byte to a block object
@@ -58,7 +58,7 @@ func (b *Block) Interupt() bool {
 
 func (b *Block) IsValid(pvb *Block) bool {
 	var metaData string
-	if b.PVHash != pvb.Hash {
+	if b.PVHash != pvb.Hash || (pvb.Index + 1) != b.Index {
 		return false
 	}
 	tStr := strconv.FormatInt(b.Timestamp, 10)
