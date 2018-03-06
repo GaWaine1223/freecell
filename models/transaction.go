@@ -11,9 +11,13 @@ import (
 
 type Trans struct {
 	// public key
-	Account		string
-	Cipher		string
-	Transaction	string
+	Account		string		`json:"account"`
+	Cipher		string        `json:"cipher"`
+	Transaction	string        `json:"transaction"`
+}
+
+func (t *Trans) IsVaild() error {
+	return keygen.Verify(t.Account, t.Cipher, []byte(t.Transaction))
 }
 
 func FormateTrans(b []byte) (*Trans, error) {
@@ -25,7 +29,7 @@ func FormateTrans(b []byte) (*Trans, error) {
 	return trans, nil
 }
 
-func (t *Trans) GenerateWithID(id, data string) (*Trans, error) {
+func GenerateTransWithID(id, data string) (*Trans, error) {
 	a, c, err := keygen.Signature(id, []byte(data))
 	if err != nil {
 		return nil, err
@@ -36,7 +40,7 @@ func (t *Trans) GenerateWithID(id, data string) (*Trans, error) {
 		Transaction: data}, nil
 }
 
-func (t *Trans) GenerateWithKey(pb, pv, data string) (*Trans, error) {
+func GenerateTransWithKey(pb, pv, data string) (*Trans, error) {
 	c, err := keygen.Signature2(pv, []byte(data))
 	if err != nil {
 		return nil, err
@@ -45,8 +49,4 @@ func (t *Trans) GenerateWithKey(pb, pv, data string) (*Trans, error) {
 		Account: pb,
 		Cipher: c,
 		Transaction: data}, nil
-}
-
-func (t *Trans) IsVaild() error {
-	return keygen.Verify(t.Account, t.Cipher, []byte(t.Transaction))
 }

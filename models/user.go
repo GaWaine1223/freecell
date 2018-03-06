@@ -19,17 +19,27 @@ type User struct{
 }
 
 func Login(name string) (*User, error) {
-	if err := keygen.GenRsaKey(common.RSADefaultLenth, name); err != nil {
-		return nil, err
-	}
 	uPath := keygen.GetUserPath(name)
 	pvKeyPath := path.Join(uPath, "private.pem")
 	pbKeyPath := path.Join(uPath, "public.pem")
-	pv, err:= keygen.GetKeyMd5(pvKeyPath)
+	pv, errv := keygen.GetKeyMd5(pvKeyPath)
+	pb, errb := keygen.GetKeyMd5(pbKeyPath)
+	if errv == nil && errb == nil {
+		return &User{
+			Name: name,
+			Path: uPath,
+			Public: pb,
+			Private: pv}, nil
+	}
+
+	if err := keygen.GenRsaKey(common.RSADefaultLenth, name); err != nil {
+		return nil, err
+	}
+	pv, err := keygen.GetKeyMd5(pvKeyPath)
 	if err != nil {
 		return nil, err
 	}
-	pb, err := keygen.GetKeyMd5(pbKeyPath)
+	pb, err = keygen.GetKeyMd5(pbKeyPath)
 	if err != nil {
 		return nil, err
 	}

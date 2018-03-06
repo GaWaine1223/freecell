@@ -25,12 +25,26 @@ func newChain() *TheChain {
 	theChain := make([]*Block, 0)
 	return &TheChain{theChain}
 }
+
+func FormateChain(b []byte) (*TheChain, error) {
+	c := &TheChain{}
+	err := json.Unmarshal(b, c)
+	if err != nil {
+		return nil, err
+	}
+	return c, err
+}
+
 func AppendChain(b *Block) error {
 	if !b.IsValid(GetChainTail()) {
 		return common.Error(common.ErrInvalidBlock)
 	}
 	singleChain.Chain = append(singleChain.Chain, b)
 	return nil
+}
+
+func FetchChain() *TheChain {
+	return singleChain
 }
 
 func GetChainTail() *Block {
@@ -60,15 +74,3 @@ func ReplaceChain(c2 *TheChain) error {
 	return nil
 }
 
-func FetchChain() *TheChain {
-	return singleChain
-}
-
-func FormateChain(b []byte) (*TheChain, error) {
-	c := &TheChain{}
-	err := json.Unmarshal(b, c)
-	if err != nil {
-		return nil, err
-	}
-	return c, err
-}
